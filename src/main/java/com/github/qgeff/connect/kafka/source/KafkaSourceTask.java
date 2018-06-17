@@ -17,11 +17,8 @@ package com.github.qgeff.connect.kafka.source;
 import com.github.qgeff.connect.kafka.source.config.KafkaSourceTaskConfig;
 import com.github.qgeff.connect.kafka.util.Version;
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
-import java.util.Properties;
+import java.util.*;
+
 import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.clients.consumer.ConsumerRecords;
 import org.apache.kafka.clients.consumer.KafkaConsumer;
@@ -80,16 +77,17 @@ public class KafkaSourceTask<K extends Serializable, V extends Serializable> ext
     } catch (ConfigException e) {
       throw new ConnectException("Couldn't start KafkaSourceTask due to configuration error", e);
     }
-    consumer = new KafkaConsumer<K, V>(getKafkaConsumerConfig(config));
+    consumer = new KafkaConsumer<>(getKafkaConsumerConfig(config));
+    consumer.subscribe(Collections.singletonList(config.getString(KafkaSourceTaskConfig.TOPIC_SOURCE)));
   }
 
   private Properties getKafkaConsumerConfig(KafkaSourceTaskConfig config) {
     Properties configs = new Properties();
-    configs.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, config.getString("bootstrap.servers"));
-    configs.put(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG, config.getString("auto.offset.reset"));
-    configs.put(ConsumerConfig.CLIENT_ID_CONFIG, config.getString("clientId"));
-    configs.put(ConsumerConfig.MAX_PARTITION_FETCH_BYTES_CONFIG,
-        config.getString("max.partition.fetch.bytes"));
+    configs.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, config.getString(KafkaSourceTaskConfig.BROKER_SOURCE));
+    configs.put(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG, config.getString(KafkaSourceTaskConfig.AUTO_OFFSET_RESET));
+//    configs.put(ConsumerConfig.CLIENT_ID_CONFIG, config.getString(KafkaSourceTaskConfig.CLIENT_ID));
+    configs.put(ConsumerConfig.GROUP_ID_CONFIG,config.getString(KafkaSourceTaskConfig.CLIENT_ID));
+    configs.put(ConsumerConfig.MAX_PARTITION_FETCH_BYTES_CONFIG, config.getInt(KafkaSourceTaskConfig.MAX_PARTITION_FETCH_BYTES_CONFIG));
     configs.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG,
         "org.apache.kafka.common.serialization.StringDeserializer");
     configs.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG,
@@ -119,7 +117,7 @@ public class KafkaSourceTask<K extends Serializable, V extends Serializable> ext
           .put(STRUCT_PAYLOAD_FIELD, record.value());*/
 
       sourceRecords.add(
-          new SourceRecord(Collections.singletonMap("sourceTopic", record.topic()), Collections.singletonMap("sourceOffest",record.offset()), this.config.getTopicSink(), null,
+          new SourceRecord(Collections.singletonMap("sourceTopic", record.topic()), Collections.singletonMap("sourceOffest",record.offset()), this.config.getString(KafkaSourceTaskConfig.TOPIC_SINK), null,
               record.value()));
     });
 

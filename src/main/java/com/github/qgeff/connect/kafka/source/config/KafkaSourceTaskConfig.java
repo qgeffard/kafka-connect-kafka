@@ -16,10 +16,12 @@
 
 package com.github.qgeff.connect.kafka.source.config;
 
+import org.apache.kafka.clients.consumer.KafkaConsumer;
 import org.apache.kafka.common.config.AbstractConfig;
 import org.apache.kafka.common.config.ConfigDef;
 import org.apache.kafka.common.config.ConfigDef.Importance;
 import org.apache.kafka.common.config.ConfigDef.Type;
+import org.apache.kafka.common.config.ConfigException;
 
 import java.util.Map;
 
@@ -29,13 +31,35 @@ import java.util.Map;
  */
 public class KafkaSourceTaskConfig extends AbstractConfig {
 
-  static ConfigDef config = new ConfigDef();
+  public static final String BROKER_SOURCE = "broker.source";
+  public static final String BROKER_SOURCE_DEFAULT = "localhost:9092";
+
+  public static final String TOPIC_SOURCE = "topic.source";
+  public static final String TOPIC_SOURCE_DEFAULT = "source";
+
+  public static final String TOPIC_SINK = "topic.sink";
+  public static final String TOPIC_SINK_DEFAULT = "sink";
+
+  public static final String CLIENT_ID = "consumer.group.id";
+  public static final String CLIENT_ID_DEFAULT = "default.group.id";
+
+  public static final String AUTO_OFFSET_RESET = "auto.offset.reset";
+  public static final String AUTO_OFFSET_RESET_DEFAULT = "earliest";
+
+  public static final String MAX_PARTITION_FETCH_BYTES_CONFIG = "max.partition.fetch.bytes";
+  public static final Integer MAX_PARTITION_FETCH_BYTES_CONFIG_DEFAULT = 1048576;
+
+
+  static ConfigDef config = new ConfigDef()
+          .define(BROKER_SOURCE, Type.STRING, BROKER_SOURCE_DEFAULT, Importance.HIGH,null)
+          .define(TOPIC_SOURCE, Type.STRING, TOPIC_SOURCE_DEFAULT, Importance.HIGH,null)
+          .define(TOPIC_SINK, Type.STRING, TOPIC_SINK_DEFAULT, Importance.HIGH,null)
+          .define(CLIENT_ID, Type.STRING, CLIENT_ID_DEFAULT, Importance.HIGH,null)
+          .define(AUTO_OFFSET_RESET, Type.STRING, AUTO_OFFSET_RESET_DEFAULT, Importance.HIGH,null)
+          .define(MAX_PARTITION_FETCH_BYTES_CONFIG, Type.INT, MAX_PARTITION_FETCH_BYTES_CONFIG_DEFAULT, Importance.HIGH,null);
 
   public KafkaSourceTaskConfig(Map<String, String> props) {
     super(config, props);
   }
 
-  public String getTopicSink() {
-    return "topicsink";
-  }
 }
