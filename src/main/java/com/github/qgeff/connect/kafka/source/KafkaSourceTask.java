@@ -85,8 +85,7 @@ public class KafkaSourceTask<K extends Serializable, V extends Serializable> ext
     Properties configs = new Properties();
     configs.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, config.getString(KafkaSourceTaskConfig.BROKER_SOURCE));
     configs.put(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG, config.getString(KafkaSourceTaskConfig.AUTO_OFFSET_RESET));
-//    configs.put(ConsumerConfig.CLIENT_ID_CONFIG, config.getString(KafkaSourceTaskConfig.CLIENT_ID));
-    configs.put(ConsumerConfig.GROUP_ID_CONFIG,config.getString(KafkaSourceTaskConfig.CLIENT_ID));
+    configs.put(ConsumerConfig.GROUP_ID_CONFIG,config.getString(KafkaSourceTaskConfig.GROUP_ID));
     configs.put(ConsumerConfig.MAX_PARTITION_FETCH_BYTES_CONFIG, config.getInt(KafkaSourceTaskConfig.MAX_PARTITION_FETCH_BYTES_CONFIG));
     configs.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG,
         "org.apache.kafka.common.serialization.StringDeserializer");

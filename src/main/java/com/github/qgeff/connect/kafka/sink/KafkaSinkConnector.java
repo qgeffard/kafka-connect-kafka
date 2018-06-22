@@ -1,6 +1,6 @@
 package com.github.qgeff.connect.kafka.sink;
 
-import com.github.qgeff.connect.kafka.sink.config.KafkaSinkConfig;
+import com.github.qgeff.connect.kafka.sink.config.KafkaSinkTaskConfig;
 import com.github.qgeff.connect.kafka.util.Version;
 import java.util.ArrayList;
 import java.util.List;
@@ -42,7 +42,7 @@ public class KafkaSinkConnector extends SinkConnector {
 
   @Override
   public ConfigDef config() {
-    return KafkaSinkConfig.CONFIG_DEF;
+    return KafkaSinkTaskConfig.CONFIG_DEF;
   }
 
   @Override

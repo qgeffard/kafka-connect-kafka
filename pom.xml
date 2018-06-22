@@ -121,7 +121,6 @@
         <configuration>
           <compilerArgs>
             <arg>-Xlint:all</arg>
-            <arg>-Werror</arg>
           </compilerArgs>
           <source>1.8</source>
           <target>1.8</target>
